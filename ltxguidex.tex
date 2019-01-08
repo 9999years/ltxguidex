@@ -1,0 +1,174 @@
+\documentclass{ltxguidex}
+\usepackage{bera}
+\newcommand{\ltx}{\ltxclass{ltxguidex}}
+\title{Towards Better \LaTeX\ Documentation With the \ltx\ Document Class}
+\author{Rebecca Turner\thanks{Brandeis University;
+	\email{rebeccaturner@brandeis.edu}}}
+\date{2019-01-07}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+	The \ltx\ document class provides\dots
+
+	This document is written with the \ltx\ document class.
+\end{abstract}
+
+\section{The State of the Docs}
+
+\LaTeX\ documentation is easy enough to write that --- in general --- nobody
+has bothered to package the ways of making it better. If one examines the
+documentation for their favorite package, they'll likely find a few command
+definitions that make some aspect of documentation writing more ergonomic.
+
+\LaTeX\ documentation is enabled with two document classes and several
+packages. Document classes include:
+\begin{classes}
+	\item[ltxdoc] Defines very little other than a few
+	shorthands for documenting commands. Designed to be integrated with
+	the \docstrip\ system, but I've seen plenty of \extension{dtx} files
+	documented with \ltxclass{ltxguide}. However, I haven't yet used
+	\docstrip, so my experience here is limited.
+
+	\item[ltxguide] Provides several ergonomic features absent
+	in \ltxclass{ltxdoc}. However, \ltxclass{ltxguide} is almost entirely
+	undocumented, a fact which is partially mitigated by the fact that
+	it's only about 150 lines long. \ltx\ is, as the name implies, based
+	on \ltxclass{ltxguide}.
+\end{classes}
+And supporting packages include:
+\begin{packages}
+	\item[hypdoc] One of many, many packages by Heiko Oberdiek.
+	\ctan{hypdoc} undertakes the ambitious task of patching the
+	\ctan{doc} package in order to generate better indexes. In my
+	experience, \ctan{hypdoc} is not compatible with
+	\ltxclass{ltxguide}; as such, it isn't loaded in \ltx.
+
+	\item[doctools] Provides many useful secondary commands such as
+	|\ltxclass|, |\package|, and so on. Many are duplicated here.
+
+	\item[showexpl] Provides the |LTXexample| environment which typesets
+	\LaTeX\ code and displays it in a listing side-by-side.
+	\ctan{showexpl} provides the functionality of \ctan{listings}'
+	|\lstsample| command and more. \ctan{showexpl} does, however, rely
+	on the fairly hefty \ctan{listings} package.
+\end{packages}
+
+\section{The \ltx\ document class}
+Although \ltx\ provides many useful commands, much of its utility is in its
+aesthetics. Much \LaTeX\ documentation is very ugly because producing
+beautiful documentation requires significantly more code than most package
+authors are interested in writing. This document is written with \ltx\ and
+one package loaded (the \ctan{bera} font family).
+
+\section{New commands}
+\ltx\ provides several new commands for convenience.
+
+\begin{desc}
+|\email{<email>}|
+\end{desc}
+
+Typesets an email address with a |mailto:| link.
+
+\begin{example}
+	Emails, along with other hyperlinks, are colored |magenta|, although
+	\ltx's default magenta is a bit closer to purple.
+\begin{LTXexample}
+\email{rebeccaturner@brandeis.edu}
+\end{LTXexample}
+\end{example}
+
+\begin{desc}
+|\https{<url>}|\qquad|\http{<url>}|
+\end{desc}
+
+Typesets |<url>| with |https://| or |http://| prepended to the link address;
+this makes links display a bit prettier than |\url| might.
+
+\begin{example} The following two listings are equivalent:
+\begin{LTXexample}
+\https{ctan.org}
+\end{LTXexample}
+\begin{LTXexample}
+\href{https://ctan.org}{ctan.org}
+\end{LTXexample}
+\end{example}
+
+\begin{desc}
+|\ctan{<package>}|
+\end{desc}
+
+Typesets a package name with a link to |ctan.org/pkg/<package>|.
+
+\begin{warning}
+	\ltx's definition of |\ctan| differs from \ltxclass{ltxguide}'s,
+	which simply typesets ``\textsc{ctan}'' in small-caps.
+\end{warning}
+
+\begin{LTXexample}
+the \ctan{listings} package\dots
+\end{LTXexample}
+
+\begin{desc}
+|\package{<package>}|\\
+|\ltxclass{<document class>}|\\
+|\option{<option name>}|\\
+|\filename{<filename>}|\\
+|\extension{<file extension>}|
+\end{desc}
+
+Typesets a \LaTeX\ package, option, file extension, etc.\ in |\texttt|.
+
+\begin{note}
+	Unlike those defined in the \ctan{doctools} package, these commands
+	don't add entries to the index.
+\end{note}
+
+\begin{LTXexample}
+\extension{tex} files
+\end{LTXexample}
+
+\begin{desc}
+|\begin{warning}...\end{warning}|\\
+|\begin{note}...\end{note}|\\
+|\begin{example}...\end{example}|\\
+|\begin{bug}...\end{bug}|
+\end{desc}
+
+Typeset ``notices'' with a hanging indent. Original definitions written by
+Javier Bezos for the \ctan{enumitem} documenation. |\ltxguidex@noticestyle|
+is executed before the marker text (``warning,'' ``note,'' etc.) in a
+separate group. New notice environments can be created with |\newnotice|.
+
+\begin{bug}
+	If the first content in a notice environment is vertical, the marker
+	text is hidden. This can be avoided by starting the
+	environment with |\leavevmode\\| or by adding some introductory
+	material to the first line.
+\end{bug}
+
+\begin{example}
+	Although this example is short, note that subsequent lines will
+	be indented. These environments only vary by text.
+
+\begin{LTXexample}
+\begin{warning}
+    Lorem ipsum\dots
+\end{warning}
+\end{LTXexample}
+\end{example}
+
+\begin{desc}
+|\newnotice{<environment name>}{<marker text>}|
+\end{desc}
+
+Creates a new notice environment in the style of |warning|, |note|, and so
+on. The marker text is automatically uppercased.
+
+\begin{desc}
+|\begin{desc}...\end{desc}|
+\end{desc}
+
+Describes a command or environment, setting it out into the margin.
+
+\end{document}
