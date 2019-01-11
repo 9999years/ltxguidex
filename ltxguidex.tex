@@ -1,6 +1,7 @@
 \documentclass{ltxguidex}
 \usepackage{bera}
 \newcommand{\ltx}{\ltxclass{ltxguidex}}
+\newcommand{\ltxguide}{\ltxclass{ltxguide}}
 \title{Towards Better \LaTeX\ Documentation With the \ltx\ Document Class}
 \author{Rebecca Turner\thanks{Brandeis University;
 	\email{rebeccaturner@brandeis.edu}}}
@@ -13,6 +14,18 @@
 
 	This document is written with the \ltx\ document class.
 \end{abstract}
+
+\begin{lstlisting}
+|a pipe
+\end{lstlisting}
+
+|\email{<email addr.>}|
+
+\begin{lstlisting}[escapeinside=<>]
+zzz <xyz $a_i$>
+\end{lstlisting}
+
+\end{document}
 
 \section{The State of the Docs}
 
@@ -27,14 +40,14 @@ packages. Document classes include:
 	\item[ltxdoc] Defines very little other than a few
 	shorthands for documenting commands. Designed to be integrated with
 	the \docstrip\ system, but I've seen plenty of \extension{dtx} files
-	documented with \ltxclass{ltxguide}. However, I haven't yet used
+	documented with \ltxguide. However, I haven't yet used
 	\docstrip, so my experience here is limited.
 
 	\item[ltxguide] Provides several ergonomic features absent
-	in \ltxclass{ltxdoc}. However, \ltxclass{ltxguide} is almost entirely
+	in \ltxclass{ltxdoc}. However, \ltxguide\ is almost entirely
 	undocumented, a fact which is partially mitigated by the fact that
 	it's only about 150 lines long. \ltx\ is, as the name implies, based
-	on \ltxclass{ltxguide}.
+	on \ltxguide.
 \end{classes}
 And supporting packages include:
 \begin{packages}
@@ -42,7 +55,7 @@ And supporting packages include:
 	\ctan{hypdoc} undertakes the ambitious task of patching the
 	\ctan{doc} package in order to generate better indexes. In my
 	experience, \ctan{hypdoc} is not compatible with
-	\ltxclass{ltxguide}; as such, it isn't loaded in \ltx.
+	\ltxguide; as such, it isn't loaded in \ltx.
 
 	\item[doctools] Provides many useful secondary commands such as
 	|\ltxclass|, |\package|, and so on. Many are duplicated here.
@@ -59,7 +72,46 @@ Although \ltx\ provides many useful commands, much of its utility is in its
 aesthetics. Much \LaTeX\ documentation is very ugly because producing
 beautiful documentation requires significantly more code than most package
 authors are interested in writing. This document is written with \ltx\ and
-one package loaded (the \ctan{bera} font family).
+one package loaded (the \ctan{bera} font family). Because \ltx\ is written
+with inherent beauty, it ends up being a bit heavier than its competitors;
+notably, it loads \ctan{xcolor}, \ctan{listings}, \ctan{graphicx}, and
+\ctan{calc} by default.
+
+\section{Commands provided by \ltxguide}
+
+\begin{note}
+	In \ltxguide, pipe characters (\texttt{\pipe}) mark verbatim text.
+
+	However, between two pipes, the angle brackets |<<| and |>>| typeset
+	as pretty angle brackets with regular italics between them;
+	therefore, \texttt{\pipe}|<<package>>|\texttt{\pipe} typesets as
+	|<package>|.
+
+	To write literal angle brackets, simply double the characters;
+	\texttt{\pipe}|<<<<|\texttt{\pipe} will render as |<<|  and
+	\texttt{\pipe}|>>>>|\texttt{\pipe} will render as |>>|.
+
+	To write literal pipe characters, use the |\pipe| command.
+\end{note}
+
+\begin{desc}
+|\begin{desc}...\end{desc}|
+\end{desc}
+
+Describes a command or environment, setting it out into the margin and
+surrounding it with a frame.
+\begin{example}
+	Unfortunately, a side-by-side listing doesn't seem to be possible
+	here because pipes seem to be gobbled by the \package{listings}
+	package. However, here's how the |\email| command is described in
+	this document:
+
+\begin{verbatim}
+\begin{desc}
+|\email{<<email>>}|
+\end{desc}
+\end{verbatim}
+\end{example}
 
 \section{New commands}
 \ltx\ provides several new commands for convenience.
@@ -101,7 +153,7 @@ this makes links display a bit prettier than |\url| might.
 Typesets a package name with a link to |ctan.org/pkg/<package>|.
 
 \begin{warning}
-	\ltx's definition of |\ctan| differs from \ltxclass{ltxguide}'s,
+	\ltx's definition of |\ctan| differs from \ltxguide's,
 	which simply typesets ``\textsc{ctan}'' in small-caps.
 \end{warning}
 
@@ -135,16 +187,20 @@ Typesets a \LaTeX\ package, option, file extension, etc.\ in |\texttt|.
 |\begin{bug}...\end{bug}|
 \end{desc}
 
-Typeset ``notices'' with a hanging indent. Original definitions written by
-Javier Bezos for the \ctan{enumitem} documenation. |\ltxguidex@noticestyle|
-is executed before the marker text (``warning,'' ``note,'' etc.) in a
-separate group. New notice environments can be created with |\newnotice|.
+These environments typeset ``notices'' with a hanging indent. Original
+definitions written by Javier Bezos for the \ctan{enumitem} documenation.
+|\ltxguidex@noticestyle| is executed before the marker text (``warning,''
+``note,'' etc.) in a separate group. New notice environments can be created
+with |\newnotice|.
 
 \begin{bug}
 	If the first content in a notice environment is vertical, the marker
 	text is hidden. This can be avoided by starting the
 	environment with |\leavevmode\\| or by adding some introductory
 	material to the first line.
+
+	This is actually a bug in the |\list| command that the notice
+	environments use.
 \end{bug}
 
 \begin{example}
@@ -166,9 +222,92 @@ Creates a new notice environment in the style of |warning|, |note|, and so
 on. The marker text is automatically uppercased.
 
 \begin{desc}
-|\begin{desc}...\end{desc}|
+|\begin{LTXexample}[<options>]...\end{LTXexample}|
 \end{desc}
 
-Describes a command or environment, setting it out into the margin.
+Typesets \LaTeX\ code next to a listing of its source. Providing examples
+makes your user's lives easier, and should be done as much as possible. The
+|LTXexample| environment is provided by the \ctan{showexpl} package.
+Excerpted from \ctan{showexpl}'s documentation as of v0.3o 2016/12/11, valid
+options include:
+
+\begin{options}
+	\item[attachfile] Boolean valued key, default value: false. If set to
+	true the sourcecode will be attached to the \extension{pdf}
+	file---presumed that the document is processed by |pdflatex|.
+	\item[codefile] Name of the (temporary) file that contains the code
+	which will be formatted as source code. The default value is |\jobname.tmp|.
+	\item[explpreset] A |<key val list>| which serves for presetting the
+	properties of the formatting of the source code, for values see the
+	documentation of the \ctan{listings} package. The default value is
+	empty.\footnote{\ltx\ redefines the default to perform syntax
+	highlighting for \LaTeX, in addition to the general improvements
+	made for all listings in the document.}
+	\item[graphic] Name of a (graphic) file. This file---if present---will
+	be included and displayed instead of the formatted code. The default value is empty.
+	\item[hsep] Defines the horizontal distance between the source code and the
+	formatted text.
+	\item[justification] Defines the justification of the formatted text:
+	reasonable values are |\raggedleft|, |\raggedright|, |\centering|. The
+	default value is |\raggedright|.
+	\item[overhang] A \textit{dimen}-value that defines the amount by which
+	the formatted text and the source code can overlap the print space. The
+	default value is 0\,pt.
+	\item[pos:] Defines the relative position of the formatted text
+	relating to the source code. Allowed values are |t|, |b|, |l|, |r|,
+	|o|, and |i| for top, bottom, left, right, outer, and inner. The last
+	values give sense only for two-sided printing, where there are outer
+	and inner margins of a page. The default value is |l|.
+	\item[preset] Any \TeX\ code executed before the sample code but
+	not visible in the listings area.
+	\item[rangeaccept] Boolean valued key, default value is false. If set
+	to  true, one can define ranges of lines that will be excerpted from
+	the source code.
+	\item[rframe] Defines the form of the frame around the formatted
+	text. With a non-empty value (e.\,g. ``single'') a simple frame
+	will be drawn. In the future more kinds of frames will be supported.
+	The default value is empty (no frame).
+	\item[varwidth] Boolean valued key, default value is false. If set to
+	true, the formatted text is set with its ``natural'' width instead of a
+	fixed width as given by the value of the option |width|.
+	\item[vsep] Defines the vertical distance between the source code and the
+	formatted text.
+	\item[wide] Boolean valued key, default value is false. If set to
+	true, the source code and the formatted text overlap the print space
+	and the margin area.
+	\item[width] A \textit{dimen} value that defines the width of the
+	formatted text. The default value depends of the relative positions of
+	the source code and the formatted text.
+	\item[scaled] Without a value the formatted text will be scaled to fit
+	the given width of the result area. With a number as value the formatted
+	text will be scaled by this number.
+\end{options}
+
+In addition to these options the kind of the result box (default: |\fbox|)
+can be changed. For example:
+\begin{latexcode}
+\renewcommand\ResultBox{\fcolorbox{green}{lightgray}}
+\setlength\ResultBoxSep{5mm}%  default: \fboxsep
+\setlength\ResultBoxRule{2mm}% default: \fboxrule
+\end{latexcode}
+
+\begin{desc}
+|\begin{packages}...\end{packages}|\\
+|\begin{classes}...\end{classes}|\\
+|\begin{options}...\end{options}|\\
+\end{desc}
+
+Frequently, package authors need to describe a series of options, packages,
+or document classes. These environments wrap the |description| environment
+and provide an |\item| which wraps a command like |\package|. In the
+|packages| environment, |\item[listings]| translates to
+|\item[\package{listings}]|.
+
+\begin{LTXexample}
+\begin{options}
+    \item[foo] \dots
+    \item[bar] \dots
+\end{options}
+\end{LTXexample}
 
 \end{document}
