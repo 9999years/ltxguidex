@@ -1,5 +1,9 @@
 \documentclass{ltxguidex}
-\usepackage{bera}
+\usepackage{fontspec}
+\setmainfont{Tiempos Text}
+\usepackage{FiraSans}
+\usepackage{FiraMono}
+
 \newcommand{\ltx}{\ltxclass{ltxguidex}}
 \newcommand{\ltxguide}{\ltxclass{ltxguide}}
 \title{Towards Better \LaTeX\ Documentation With the \ltx\ Document Class}
@@ -24,12 +28,25 @@
 	not be surprised if future versions break your docs.
 \end{note}
 
+\begin{note}
+	Browse the sources, contribute, or complain at \\
+	\https{github.com/9999years/ltxguidex}
+\end{note}
+
+\tableofcontents
+\vfill
+\pagebreak
+
 \section{The State of the Docs}
 
 \LaTeX\ documentation is easy enough to write that --- in general --- nobody
 has bothered to package the ways of making it better. If one examines the
 documentation for their favorite package, they'll likely find a few command
 definitions that make some aspect of documentation writing more ergonomic.
+In the case of complex packages like \ctan{listings} or --- in an extreme
+case --- \ctan{pgf}, it's commonplace to see packages define their own
+internal documentation packages containing hundreds-to-thousands of lines of
+documentation macros.
 
 \LaTeX\ documentation is enabled with two document classes and several
 packages. Document classes include:
@@ -326,6 +343,7 @@ and provide an |\item| which wraps a command like |\package|. In the
 |\begin{advise}...\end{advise}| $\equiv$\\
 |\begin{advice}...\end{advice}| $\equiv$\\
 |\begin{faq}...\end{faq}|\\
+|\Q|\qquad|\A|\qquad|\advisespace|
 \end{desc}
 
 Roughly copied from \ctan{listings}' internal \package{lstdoc} package,
@@ -353,5 +371,30 @@ they're defined to |\item| and |\advisespace|, respectively.
 
 	The font is set with |\advisestyle|.
 \end{note}
+
+\begin{desc}
+|\begin{keys}...\end{keys}|\\
+|\key[<options>]{<key name>}[<key value>][<default value>]|
+\end{desc}
+
+Describes keys. |<options>| can include
+
+\begin{keys}
+	\key{v}[\m{version}]
+	The version a key was introduced.
+
+	\begin{warning}
+		This key is currently ignored.
+	\end{warning}
+
+	\key{default}[\m{default value}]
+	An alias for the final argument; a default value if the key isn't
+	given.
+
+	\key{note}[\m{note}]
+	A note set in the left margin; might note a group of features or
+	something else.
+\end{keys}
+
 
 \end{document}

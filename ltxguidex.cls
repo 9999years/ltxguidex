@@ -17,6 +17,7 @@
 %]{doctools}
 \RequirePackage[colorlinks=true]{hyperref}
 \RequirePackage{xparse}
+\RequirePackage{xkeyval}
 \RequirePackage{xcolor}
 \RequirePackage{framed}
 \RequirePackage{showexpl}
@@ -149,13 +150,32 @@
     \fi
     \alternative@}
 
+\define@cmdkeys{ltxkey}{v, note, default}
 \newenvironment{keys}
 	{\begin{description}
-	% opts:
-	% - v: min version
-	% - note: left margin note
 	% \key[<opts>]{<keyname>}[<value>][<default>]
-	\NewDocumentCommand{\key}{o m o o}{}
+	\NewDocumentCommand{\key}{o m o o}{{%
+		\providecommand{\bool}{\m{\alternative{true,false}}}%
+		\IfValueT{##1}{%
+			\setkeys{ltxkey}{##1}%
+		}%
+		\item
+		\leavevmode
+		\hbox{\@ifundefined{cmdKV@ltxkey@note}{}{%
+			\llap{\footnotesize\textit{\cmdKV@ltxkey@note}\quad}%
+		}%
+		\texttt{\textbf{\color{magenta}##2}}%
+		\IfValueT{##3}{%
+			\texttt{=}##3%
+		}}%
+		\IfValueT{##4}{%
+			\hfill\texttt{##4}%
+		}%
+		\@ifundefined{cmdKV@ltxkey@default}{}{%
+			\hfill\texttt{\cmdKV@ltxkey@default}%
+		}%
+		\par
+	}}%
 	}
 	{\end{description}}
 
@@ -164,6 +184,7 @@
 \providecommand{\option}   [1]{\texttt{#1}}
 \providecommand{\extension}[1]{\texttt{.#1}}
 \providecommand{\filename} [1]{\texttt{#1}}
+\providecommand{\meta}     [1]{\m{#1}}
 
 \newcommand{\docstrip}{\textsc{docstrip}}
 \newcommand{\pipe}{\char"7C}
