@@ -15,17 +15,14 @@
 	This document is written with the \ltx\ document class.
 \end{abstract}
 
-\begin{lstlisting}
-|a pipe
-\end{lstlisting}
+\begin{note}
+	This release of \ltx\ is an experimental public beta; it intends to
+	demonstrate a hopeful new direction without committing to a stable
+	public \textsc{api}.
 
-|\email{<email addr.>}|
-
-\begin{lstlisting}[escapeinside=<>]
-zzz <xyz $a_i$>
-\end{lstlisting}
-
-\end{document}
+	Although \ltx\ is now suitable for use in your own documentation, do
+	not be surprised if future versions break your docs.
+\end{note}
 
 \section{The State of the Docs}
 
@@ -65,6 +62,11 @@ And supporting packages include:
 	\ctan{showexpl} provides the functionality of \ctan{listings}'
 	|\lstsample| command and more. \ctan{showexpl} does, however, rely
 	on the fairly hefty \ctan{listings} package.
+
+	Compare to more ``plain'' \LaTeX\ documentation, \ltx\ documentation
+	can be expected to compile somewhat slower. This author is of the
+	opinion that the improvements are so numerous that the slow-down is
+	worth it.
 \end{packages}
 
 \section{The \ltx\ document class}
@@ -92,19 +94,32 @@ notably, it loads \ctan{xcolor}, \ctan{listings}, \ctan{graphicx}, and
 	\texttt{\pipe}|>>>>|\texttt{\pipe} will render as |>>|.
 
 	To write literal pipe characters, use the |\pipe| command.
+	\ltxguide\ uses \ctan{shortvrb} to supply this verbatim code. There
+	are some small conflicts with \ltx's use of the \ctan{listings}
+	package (in particular, pipes are silently gobbled from
+	|lstlistings| environments, although they work normally within
+	|verbatim|), which will hopefully be resolved with a coming change
+	to \package{listings}; this simply depends on how quickly Jobst
+	Hoffmann emails me back.
 \end{note}
+
+\section{New commands}
+\ltx\ provides several new commands for convenience.
 
 \begin{desc}
 |\begin{desc}...\end{desc}|
 \end{desc}
 
 Describes a command or environment, setting it out into the margin and
-surrounding it with a frame.
+surrounding it with a frame. Originally written by Javier Bezos for the
+\ctan{enumitem} documenation.
+
 \begin{example}
 	Unfortunately, a side-by-side listing doesn't seem to be possible
 	here because pipes seem to be gobbled by the \package{listings}
-	package. However, here's how the |\email| command is described in
-	this document:
+	package (a side-effect of loading both \ctan{listings} and
+	\ctan{shortvrb}, perhaps). However, here's how the |\email| command
+	is described in this document:
 
 \begin{verbatim}
 \begin{desc}
@@ -112,9 +127,6 @@ surrounding it with a frame.
 \end{desc}
 \end{verbatim}
 \end{example}
-
-\section{New commands}
-\ltx\ provides several new commands for convenience.
 
 \begin{desc}
 |\email{<email>}|
@@ -309,5 +321,37 @@ and provide an |\item| which wraps a command like |\package|. In the
     \item[bar] \dots
 \end{options}
 \end{LTXexample}
+
+\begin{desc}
+|\begin{advise}...\end{advise}| $\equiv$\\
+|\begin{advice}...\end{advice}| $\equiv$\\
+|\begin{faq}...\end{faq}|\\
+\end{desc}
+
+Roughly copied from \ctan{listings}' internal \package{lstdoc} package,
+these environments represent a list of questions and answers.
+
+\begin{LTXexample}
+\begin{faq}
+\Q Lorem ipsum dolor sit amet?
+\A Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+\Q Ut enim ad minim veniam, quis nostrud?
+\A Exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+\end{faq}
+\end{LTXexample}
+
+Within these environments, |\Q| and |\A| indicate a question and an answer;
+they're defined to |\item| and |\advisespace|, respectively.
+
+\begin{note}
+	|advice| and |faq| are exact synonyms for |advise|; in addition, the
+	command |\advicespace| has the same meaning as the more British
+	|\advisespace| within the environment.
+
+	The list label for the |advise| environment is |\labeladvise|.
+
+	The font is set with |\advisestyle|.
+\end{note}
 
 \end{document}
