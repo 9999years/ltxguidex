@@ -3,18 +3,24 @@
 \setmainfont{Tiempos Text}
 \usepackage{FiraSans}
 \usepackage{FiraMono}
+\def\labeladvise{→}
 
 \newcommand{\ltx}{\ltxclass{ltxguidex}}
 \newcommand{\ltxguide}{\ltxclass{ltxguide}}
 \title{Towards Better \LaTeX\ Documentation With the \ltx\ Document Class}
 \author{Rebecca Turner\thanks{Brandeis University;
 	\email{rebeccaturner@brandeis.edu}}}
-\date{2019-01-07}
+\date{2019/01/13 v0.1.0}
 \begin{document}
 \maketitle
 
 \begin{abstract}
-	The \ltx\ document class provides\dots
+	The \ltx\ document class extends \ltxguide\ with a set of
+	environments and commands that make writing beautiful \LaTeX\
+	documentation easier and more natural.
+
+	\ltx\ is licensed under the \textsc{lppl} version 1.3c, or any later
+	version at your choosing.
 
 	This document is written with the \ltx\ document class.
 \end{abstract}
@@ -37,16 +43,22 @@
 \vfill
 \pagebreak
 
-\section{The State of the Docs}
+\section{The state of the docs}
 
 \LaTeX\ documentation is easy enough to write that --- in general --- nobody
-has bothered to package the ways of making it better. If one examines the
-documentation for their favorite package, they'll likely find a few command
-definitions that make some aspect of documentation writing more ergonomic.
-In the case of complex packages like \ctan{listings} or --- in an extreme
-case --- \ctan{pgf}, it's commonplace to see packages define their own
-internal documentation packages containing hundreds-to-thousands of lines of
-documentation macros.
+has bothered to package the improvements made to the \LaTeX documentation
+systems. If one examines the documentation for their favorite package,
+they'll likely find a few command definitions that make some aspect of
+documentation writing more ergonomic. In the case of complex packages like
+\ctan{listings} or --- in an extreme case --- \ctan{pgf}, it's commonplace
+to see packages define their own internal documentation packages containing
+hundreds-to-thousands of lines of documentation macros.
+
+This class repackages useful macros from various packages' documentation,
+often changing their form (e.g.\ the macro's interface) but keeping its
+style. I've tried to balance versatility against specialization (i.e.\
+determining which features are the \textit{most} useful) as well as
+balancing short with descriptive names.
 
 \LaTeX\ documentation is enabled with two document classes and several
 packages. Document classes include:
@@ -96,29 +108,153 @@ with inherent beauty, it ends up being a bit heavier than its competitors;
 notably, it loads \ctan{xcolor}, \ctan{listings}, \ctan{graphicx}, and
 \ctan{calc} by default.
 
+\section{A note on typefaces}
+
+This document is set in
+\href{https://klim.co.nz/retail-fonts/tiempos-text/}{Tiempos Text} and
+\href{https://bboxtype.com/typefaces/FiraSans/}{Fira Sans} (available on
+\textsc{ctan} as \ctan{fira}).
+
+For your own documents, I would recommend \ctan{bera} or \ctan{plex},
+although neither has small caps, which I consider essential.
+
+When deciding on a serif font for \LaTeX\ documentation, I would recommend
+picking one with a tall x-height, as larger overall glyphs makes documents
+easier to read on small screens (nobody's going to be printing out your
+documentation). This will rule out most old-style serif typefaces, such as
+Garamond and Calson.
+
 \section{Commands provided by \ltxguide}
 
+In \ltxguide, pipe characters (\texttt{\pipe}) mark verbatim text.
+
+However, between two pipes, the angle brackets |<<| and |>>| typeset as
+pretty angle brackets with regular italics between them; therefore,
+\texttt{\pipe}|<<package>>|\texttt{\pipe} typesets as |<package>|.
+
+To write literal angle brackets, simply double the characters;
+\texttt{\pipe}|<<<<|\texttt{\pipe} will render as |<<|  and
+\texttt{\pipe}|>>>>|\texttt{\pipe} will render as |>>|.
+
+\begin{desc}
+|\pipe|\\
+|\bs|
+\end{desc}
+To write literal pipe characters, use the |\pipe| command. To write a
+literal backslash, use the |\bs| command.
+
+\begin{LTXexample}
+\pipe \\
+\texttt{\pipe} \\
+\textit{\pipe} \\
+\textbf{\texttt{\pipe}} \\
+\bs \\
+\texttt{\bs} \\
+\textit{\bs} \\
+\textbf{\texttt{\bs}}
+\end{LTXexample}
+
+\ltxguide\ uses \ctan{shortvrb} to activate pipes as a synonym for
+short-verbatim material. There are some small conflicts with \ltx's use of
+the \ctan{listings} package (in particular, pipes are silently gobbled from
+|lstlistings| environments, although they work normally within |verbatim|),
+which will hopefully be resolved with a coming change to \package{listings};
+this simply depends on how quickly Jobst Hoffmann emails me back.
+
+\ltxguide\ also provides the |decl| environment that powers the |desc|
+environment.
+
+\begin{desc}
+|\m{<placeholder>}|\\
+|\meta{<placeholder>}|
+\end{desc}
+
+Prints |<placeholder>| in italics within angle-brackets.
+
+\ltx\ provides |\meta| as a synonym for |\m|.
+
+\begin{LTXexample}
+\m{placeholder}
+\end{LTXexample}
+
+\begin{desc}
+|\arg{<argument>}|
+|\oarg{<argument>}|
+\end{desc}
+
+Shorthands for mandatory and optional arguments.
+
+\begin{LTXexample}
+\arg{foo}\oarg{bar}
+\end{LTXexample}
+
+\begin{desc}
+\begin{tabular}{@{}ll@{}}
+|\NFSS|     & \NFSS\\
+|\AmS|      & \AmS\\
+|\AmSLaTeX| & \AmSLaTeX\\
+|\babel|    & \babel\\
+|\SLiTeX|   & \SLiTeX\\
+|\ctanlogo| & \ctanlogo\\
+\end{tabular}
+\end{desc}
+
+Various logos.
+
 \begin{note}
-	In \ltxguide, pipe characters (\texttt{\pipe}) mark verbatim text.
-
-	However, between two pipes, the angle brackets |<<| and |>>| typeset
-	as pretty angle brackets with regular italics between them;
-	therefore, \texttt{\pipe}|<<package>>|\texttt{\pipe} typesets as
-	|<package>|.
-
-	To write literal angle brackets, simply double the characters;
-	\texttt{\pipe}|<<<<|\texttt{\pipe} will render as |<<|  and
-	\texttt{\pipe}|>>>>|\texttt{\pipe} will render as |>>|.
-
-	To write literal pipe characters, use the |\pipe| command.
-	\ltxguide\ uses \ctan{shortvrb} to supply this verbatim code. There
-	are some small conflicts with \ltx's use of the \ctan{listings}
-	package (in particular, pipes are silently gobbled from
-	|lstlistings| environments, although they work normally within
-	|verbatim|), which will hopefully be resolved with a coming change
-	to \package{listings}; this simply depends on how quickly Jobst
-	Hoffmann emails me back.
+	\ltxguide\ actually defines the \ctanlogo\ logo as |\ctan|, but this
+	class uses |\ctan| to refer to a package, so the \ctanlogo\ logo is
+	typeset with |\ctanlogo|.
 \end{note}
+
+\begin{desc}
+\begin{tabular}{@{}ll@{}}
+|\clsguide|   & \clsguide \\
+|\usrguide|   & \usrguide \\
+|\fntguide|   & \fntguide \\
+|\cfgguide|   & \cfgguide \\
+|\cyrguide|   & \cyrguide \\
+|\modguide|   & \modguide \\
+|\sourcecode| & \sourcecode \\
+|\LaTeXbook|  & \LaTeXbook \\
+|\LaTeXcomp|  & \LaTeXcomp \\
+|\LaTeXGcomp| & \LaTeXGcomp \\
+|\LaTeXWcomp| & \LaTeXWcomp \\
+\end{tabular}
+\end{desc}
+
+The names of various documents, presumably intended only for the original
+\ltxguide\ document.
+
+\begin{desc}
+|\eg|\\
+|\ie|
+\end{desc}
+
+Shortcuts for ``e.g.,''\ and ``i.e.,''\ followed by a non-breaking space.
+
+\begin{LTXexample}
+\ie the document class\dots\\
+\eg the package\dots
+\end{LTXexample}
+
+\begin{desc}
+|\NEWfeature{<version>}|\\
+|\NEWdescription{<version>}|
+\end{desc}
+
+\NEWfeature{1.0.0}
+\NEWdescription{1.0.0}
+Typeset their arguments in a |\marginpar|. This paragraph is prepended by
+|\NEWfeature{1.0.0}|
+|\NEWdescription{1.0.0}|.
+
+\begin{desc}
+|\URL{<url>}|
+\end{desc}
+
+Typesets its argument in |\texttt|. Obsolete given that \ltx\ loads
+\ctan{hyperref}.
 
 \section{New commands}
 \ltx\ provides several new commands for convenience.
@@ -176,14 +312,16 @@ this makes links display a bit prettier than |\url| might.
 \end{example}
 
 \begin{desc}
-|\ctan{<package>}|
+|\ctan{<package>}| \\
+|\ctanlogo|
 \end{desc}
 
 Typesets a package name with a link to |ctan.org/pkg/<package>|.
 
 \begin{warning}
 	\ltx's definition of |\ctan| differs from \ltxguide's,
-	which simply typesets ``\textsc{ctan}'' in small-caps.
+	which simply typesets ``\ctanlogo'' in small-caps. The \ctanlogo\
+	logo is typeset with |\ctanlogo|.
 \end{warning}
 
 \begin{LTXexample}
@@ -260,57 +398,86 @@ makes your user's lives easier, and should be done as much as possible. The
 Excerpted from \ctan{showexpl}'s documentation as of v0.3o 2016/12/11, valid
 options include:
 
-\begin{options}
-	\item[attachfile] Boolean valued key, default value: false. If set to
-	true the sourcecode will be attached to the \extension{pdf}
-	file---presumed that the document is processed by |pdflatex|.
-	\item[codefile] Name of the (temporary) file that contains the code
-	which will be formatted as source code. The default value is |\jobname.tmp|.
-	\item[explpreset] A |<key val list>| which serves for presetting the
-	properties of the formatting of the source code, for values see the
-	documentation of the \ctan{listings} package. The default value is
+\begin{keys}
+	\key{attachfile}[\bool][false]
+
+	If set to true the sourcecode will be attached to the
+	\extension{pdf} file---presumed that the document is processed by
+	|pdflatex|.
+
+	\key{codefile}[\m{filename}][\bs jobname.tmp]
+	Name of the (temporary) file that contains the code which will be
+	formatted as source code. The default value is |\jobname.tmp|.
+
+	\key{explpreset}[\m{key val list}][\{language=[LaTeX]TeX,\}]
+
+	A |<key val list>| which serves for presetting the properties of the
+	formatting of the source code, for values see the documentation of
+	the \ctan{listings} package. The default value is
 	empty.\footnote{\ltx\ redefines the default to perform syntax
 	highlighting for \LaTeX, in addition to the general improvements
 	made for all listings in the document.}
-	\item[graphic] Name of a (graphic) file. This file---if present---will
-	be included and displayed instead of the formatted code. The default value is empty.
-	\item[hsep] Defines the horizontal distance between the source code and the
+
+	\key{graphic}[\m{filename}]
+
+	If present, includes and displays this file instead of the formatted
+	code.
+
+	\key{hsep}[\m{length}]
+	Defines the horizontal distance between the source code and the
 	formatted text.
-	\item[justification] Defines the justification of the formatted text:
-	reasonable values are |\raggedleft|, |\raggedright|, |\centering|. The
-	default value is |\raggedright|.
-	\item[overhang] A \textit{dimen}-value that defines the amount by which
-	the formatted text and the source code can overlap the print space. The
-	default value is 0\,pt.
-	\item[pos:] Defines the relative position of the formatted text
-	relating to the source code. Allowed values are |t|, |b|, |l|, |r|,
-	|o|, and |i| for top, bottom, left, right, outer, and inner. The last
-	values give sense only for two-sided printing, where there are outer
-	and inner margins of a page. The default value is |l|.
-	\item[preset] Any \TeX\ code executed before the sample code but
-	not visible in the listings area.
-	\item[rangeaccept] Boolean valued key, default value is false. If set
-	to  true, one can define ranges of lines that will be excerpted from
-	the source code.
-	\item[rframe] Defines the form of the frame around the formatted
-	text. With a non-empty value (e.\,g. ``single'') a simple frame
-	will be drawn. In the future more kinds of frames will be supported.
-	The default value is empty (no frame).
-	\item[varwidth] Boolean valued key, default value is false. If set to
-	true, the formatted text is set with its ``natural'' width instead of a
-	fixed width as given by the value of the option |width|.
-	\item[vsep] Defines the vertical distance between the source code and the
+
+	\key{justification}[\m{code}][\bs raggedright]
+	Defines the justification of the formatted text: reasonable values
+	are |\raggedleft|, |\raggedright|, |\centering|.
+
+	\key{overhang}[\m{dimen}][0pt]
+	Defines the amount by which the formatted text and the source code
+	can overlap the print space. The default value is 0\,pt.
+
+	\key{pos}[\m{\alternative{t,b,l,r,o,i}}][l]
+	Defines the relative position of the formatted text relating to the
+	source code. Allowed values are |t|, |b|, |l|, |r|, |o|, and |i| for
+	top, bottom, left, right, outer, and inner. The last values give
+	sense only for two-sided printing, where there are outer and inner
+	margins of a page.
+
+	\key{preset}[\m{code}]
+	Any \TeX\ code executed before the sample code but not visible in
+	the listings area.
+
+	\key{rangeaccept}[\bool][false]
+	If set to  true, one can define ranges of lines that will be
+	excerpted from the source code.
+
+	\key{rframe}[[\texttt{single}]][\textrm{\textit{(empty)}}]
+	Defines the form of the frame around the formatted text. With a
+	non-empty value (e.\,g. ``single'') a simple frame will be drawn. In
+	the future more kinds of frames will be supported. The default value
+	is empty (no frame).
+
+	\key{varwidth}[\bool][false]
+	If set to true, the formatted text is set with its ``natural'' width
+	instead of a fixed width as given by the value of the option
+	|width|.
+
+	\key{vsep}[\m{dimen}]
+	Defines the vertical distance between the source code and the
 	formatted text.
-	\item[wide] Boolean valued key, default value is false. If set to
-	true, the source code and the formatted text overlap the print space
-	and the margin area.
-	\item[width] A \textit{dimen} value that defines the width of the
-	formatted text. The default value depends of the relative positions of
-	the source code and the formatted text.
-	\item[scaled] Without a value the formatted text will be scaled to fit
-	the given width of the result area. With a number as value the formatted
-	text will be scaled by this number.
-\end{options}
+
+	\key{wide}[\bool][false]
+	If set to true, the source code and the formatted text overlap the
+	print space and the margin area.
+
+	\key{width}[\m{dimen}]
+	Defines the width of the formatted text. The default value depends
+	of the relative positions of the source code and the formatted text.
+
+	\key{scaled}[[\m{scale factor}]]
+	Without a value the formatted text will be scaled to fit the given
+	width of the result area. With a number as value the formatted text
+	will be scaled by this number.
+\end{keys}
 
 In addition to these options the kind of the result box (default: |\fbox|)
 can be changed. For example:
@@ -341,7 +508,6 @@ and provide an |\item| which wraps a command like |\package|. In the
 
 \begin{desc}
 |\begin{advise}...\end{advise}| $\equiv$\\
-|\begin{advice}...\end{advice}| $\equiv$\\
 |\begin{faq}...\end{faq}|\\
 |\Q|\qquad|\A|\qquad|\advisespace|
 \end{desc}
@@ -363,9 +529,7 @@ Within these environments, |\Q| and |\A| indicate a question and an answer;
 they're defined to |\item| and |\advisespace|, respectively.
 
 \begin{note}
-	|advice| and |faq| are exact synonyms for |advise|; in addition, the
-	command |\advicespace| has the same meaning as the more British
-	|\advisespace| within the environment.
+	|faq| is an exact synonym for |advise|.
 
 	The list label for the |advise| environment is |\labeladvise|.
 
@@ -373,11 +537,30 @@ they're defined to |\item| and |\advisespace|, respectively.
 \end{note}
 
 \begin{desc}
-|\begin{keys}...\end{keys}|\\
-|\key[<options>]{<key name>}[<key value>][<default value>]|
+|\alternative{<comma list>}|
 \end{desc}
 
-Describes keys. |<options>| can include
+Prints a comma-separated list delimited by vertical bars. Space around
+commas is not trimmed, and alternates are printed in
+|\textup{\texttt{...}}|.
+
+This environment is from \package{lstdoc}.
+
+\begin{LTXexample}
+\alternative{true,false}
+\end{LTXexample}
+
+\begin{desc}
+|\begin{keys}...\end{keys}|\\
+|\key[<options>]{<key name>}[<key value>][<default value>]|\\
+|\bool|
+\end{desc}
+
+Describes keys. Within a |keys| environment, |\bool| indicates a true/false
+value. This environment is a recreation of \package{lstdoc}'s |syntax|
+environment with a more elegant interface.
+
+|<options>| can include:
 
 \begin{keys}
 	\key{v}[\m{version}]
@@ -396,5 +579,22 @@ Describes keys. |<options>| can include
 	something else.
 \end{keys}
 
+\begin{example}
+	Note the use of |\bool|:
+\begin{LTXexample}
+\begin{keys}
+  \key[note=addon]{key}
+      [\m{value}][default]
+  Lorem ipsum\dots
+
+  \key{display}[\bool][true]
+  Lorem ipsum\dots
+
+  \key{foo}[\m{foo}]
+  \key[v=1.3]{bar}
+  Lorem ipsum\dots
+\end{keys}
+\end{LTXexample}
+\end{example}
 
 \end{document}

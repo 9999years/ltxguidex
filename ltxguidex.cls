@@ -1,5 +1,24 @@
 \NeedsTeXFormat{LaTeX2e}[1994/12/01]
-\ProvidesClass{ltxguidex}[2019/01/08 Extended LaTeX documentation class]
+\ProvidesClass{ltxguidex}[2019/01/13 v0.1.0 Extended LaTeX documentation class]
+% Description: An improved document class for writing LaTeX documentation
+%              with extra tools for authors.
+% Homepage:    https://github.com/9999years/ltxguidex
+%              https://ctan.org/pkg/ltxguidex
+% Maintainer:  Rebecca Turner <637275@gmail.com>
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The Current Maintainer of this work is Rebecca Turner <637275@gmail.com>.
+%
+% This work consists of the files ltxguidex.cls and ltxguidex.tex.
 
 \raggedright
 \parskip=.8ex
@@ -51,6 +70,8 @@
 \renewcommand{\SX@explpreset}{
 	language=[LaTeX]TeX,
 }
+
+%\newcommand{\ltxguidex@suppressindent}{\par\@afterindentfalse\@afterheading}
 
 \newenvironment{desc}
   {\if@nobreak
@@ -126,13 +147,10 @@
 	\advisestyle
 	\let\Q\item
 	\let\A\advisespace
-	\let\advicespace\advisespace
 	}
 	{\end{itemize}}
 
-% alias `advise' to `advice' and `faq'
-\let\advice\advise
-\let\endadvice\endadvise
+% alias `advise' to `faq'
 \let\faq\advise
 \let\endfaq\endadvise
 
@@ -152,22 +170,22 @@
 
 \define@cmdkeys{ltxkey}{v, note, default}
 \newenvironment{keys}
-	{\begin{description}
-	% \key[<opts>]{<keyname>}[<value>][<default>]
+	{\begin{description}[font={}, mode=unboxed]%
+	\def\makelabel##1{}%
+	\providecommand{\bool}{\m{\alternative{true,false}}}%
 	\NewDocumentCommand{\key}{o m o o}{{%
-		\providecommand{\bool}{\m{\alternative{true,false}}}%
 		\IfValueT{##1}{%
 			\setkeys{ltxkey}{##1}%
 		}%
-		\item
+		\item[\texttt{##2}]%
 		\leavevmode
-		\hbox{\@ifundefined{cmdKV@ltxkey@note}{}{%
+		\@ifundefined{cmdKV@ltxkey@note}{}{%
 			\llap{\footnotesize\textit{\cmdKV@ltxkey@note}\quad}%
 		}%
 		\texttt{\textbf{\color{magenta}##2}}%
 		\IfValueT{##3}{%
 			\texttt{=}##3%
-		}}%
+		}%
 		\IfValueT{##4}{%
 			\hfill\texttt{##4}%
 		}%
@@ -187,7 +205,9 @@
 \providecommand{\meta}     [1]{\m{#1}}
 
 \newcommand{\docstrip}{\textsc{docstrip}}
+\let\ctanlogo\ctan
 \newcommand{\pipe}{\char"7C}
+\newcommand{\bs}{\char"5C}
 
 \newcommand{\email}[1]{\href{mailto:#1}{#1}}
 \newcommand{\http}[1]{\href{http://#1}{#1}}
