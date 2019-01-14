@@ -349,8 +349,7 @@ was authored and/or last substantially modified.  Include also a
 statement that the distribution and/or modification of that
 component is constrained by the conditions in this license.
 
-Here is 100 19106  100 19106    0     0   6368      0  0:00:03  0:00:03 --:--:--  9940
-an example of such a notice and statement:
+Here is an example of such a notice and statement:
 
   %% pig.dtx
   %% Copyright 2005 M. Y. Name
