@@ -1,6 +1,13 @@
 PACKAGE := ltxguidex
 DIST_FILES := ${PACKAGE}.cls ${PACKAGE}.tex ${PACKAGE}.pdf \
 	README.md LICENSE.txt
+
+# Simple OS detection for Make on Cygwin...
+UNAME := $(shell uname -o)
+ifeq ($(UNAME), Cygwin)
+	HOME := $(shell cygpath ${USERPROFILE})
+endif
+
 TEXMF_ROOT := ${HOME}/texmf
 INSTALL_DIR := $(TEXMF_ROOT)/tex/latex/${PACKAGE}
 LATEXMK = latexmk -aux-directory=extra -pdf -r ./.latexmkrc -pvc- -pv-
