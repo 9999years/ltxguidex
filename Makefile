@@ -26,9 +26,6 @@ LATEXMK_CLEAN := $(LATEXMK) -c
 ${PACKAGE}/${PACKAGE}.pdf: ${PACKAGE}/${PACKAGE}.tex
 	cd ${PACKAGE} && $(LATEXMK) ${PACKAGE}.tex
 
-example.pdf: example.tex
-	$(LATEXMK) $?
-
 .PHONY: dir-no-pdf
 dir-no-pdf: $(DIST_FILES) $(DOC_FILES)
 	# copies files over, escapes versions
