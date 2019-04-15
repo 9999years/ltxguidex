@@ -1,39 +1,79 @@
+VERSION := 2019\/04\/15 0.2.0
 PACKAGE := ltxguidex
-DIST_FILES := ${PACKAGE}.cls ${PACKAGE}.tex ${PACKAGE}.pdf \
-	README.md LICENSE.txt
+
+ROOT_DIR := $(CURDIR)
+DIST_FILES := ${PACKAGE}.cls
+DOC_FILES := ${PACKAGE}.tex \
+	LICENSE.txt README.md
+DIST_PDF := ${PACKAGE}.pdf
+NEEDS_LATEXMK := ${PACKAGE}.tex
+
+NEEDS_ESCAPE := ${PACKAGE}.cls ${PACKAGE}.tex
+ESCAPE_VERSION := sed -e 's/\$${VERSION}\$$/${VERSION}/' -i
+
+# Simple OS detection for Make on Cygwin...
+UNAME := $(shell uname -o)
+ifeq ($(UNAME), Cygwin)
+	# use the windows home folder rather than the cygwin one
+	HOME := $(shell cygpath ${USERPROFILE})
+endif
+
 TEXMF_ROOT := ${HOME}/texmf
 INSTALL_DIR := $(TEXMF_ROOT)/tex/latex/${PACKAGE}
-LATEXMK = latexmk -aux-directory=extra -pdf -r ./.latexmkrc -pvc- -pv-
+LATEXMK := latexmk -pdf -r $(ROOT_DIR)/.latexmkrc -pvc- -pv-
+LATEXMK_CLEAN := $(LATEXMK) -c
 
-${PACKAGE}.pdf: ${PACKAGE}.tex
-	$(LATEXMK) $?
+${PACKAGE}/${PACKAGE}.pdf: ${PACKAGE}/${PACKAGE}.tex
+	cd ${PACKAGE} && $(LATEXMK) ${PACKAGE}.tex
 
 example.pdf: example.tex
 	$(LATEXMK) $?
 
-${PACKAGE}: $(DIST_FILES)
-	mkdir -p ${PACKAGE}
-	cp -t ${PACKAGE} $?
+.PHONY: dir-no-pdf
+dir-no-pdf: $(DIST_FILES) $(DOC_FILES)
+	# copies files over, escapes versions
+	mkdir -p $(PACKAGE)
+	cp -t ${PACKAGE} $^
+	cd ${PACKAGE} && $(ESCAPE_VERSION) $(NEEDS_ESCAPE)
+
+dir: dir-pdf
+dir-pdf: dir-no-pdf ${PACKAGE}/${PACKAGE}.tex
+	cd ${PACKAGE} && $(LATEXMK) $(NEEDS_LATEXMK)
+
+${PACKAGE}: $(DIST_FILES) $(DOC_FILES)
+	make dir-no-pdf dir-pdf
 	chmod -x,+r ${PACKAGE}/*
 
+.PHONY: dist
+dist: ${PACKAGE}.tar.gz
 ${PACKAGE}.tar.gz: ${PACKAGE}
+	cd ${PACKAGE} && $(LATEXMK_CLEAN) && rm -rf extra *.fls
 	tar -czf $@ $?
+	make tidy
 	tar -tvf $@
 
-dist: ${PACKAGE}.tar.gz
-
 tidy:
-	# all generated files but the pdf
-	$(LATEXMK) -c
-	rm -rf extra
+	# all generated files but the pdf and .tar.gz
+	$(LATEXMK_CLEAN)
 	# copied files
-	rm -rf ${PACKAGE}
+	rm -rf ${PACKAGE} extra
 
+distclean: clean
 clean:
 	$(LATEXMK) -C
 	make tidy
 	rm -f ${PACKAGE}.tar.gz
 
-install: ${PACKAGE}
+install: dir-no-pdf
 	install -d ${INSTALL_DIR}
-	install $(DIST_FILES) ${INSTALL_DIR}
+	cd ${PACKAGE} && install $(DIST_FILES) ${INSTALL_DIR}
+
+.PHONY:                            help
+help:
+	@echo "dist:               Make distribution '.tar.gz'"
+	@echo "tidy:               Clean generated files except '.pdf's and '.tar.gz's"
+	@echo "clean / distclean:  Clean all generated files"
+	@echo "install:            install style and class files to \$$INSTALL_DIR"
+	@echo "                        ${INSTALL_DIR}"
+	@echo "dir-no-pdf:         The directory which is '.tar.gz'd without necessary '.pdf's"
+	@echo "dir-pdf:            The directory which is '.tar.gz'd with '.pdf's"

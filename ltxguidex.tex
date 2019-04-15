@@ -1,4 +1,5 @@
 \documentclass{ltxguidex}
+\usepackage{changelog}
 \usepackage{fontspec}
 \setmainfont{Tiempos Text}
 \usepackage{FiraSans}
@@ -10,7 +11,7 @@
 \title{Towards Better \LaTeX\ Documentation With the \ltx\ Document Class}
 \author{Rebecca Turner\thanks{Brandeis University;
 	\email{rebeccaturner@brandeis.edu}}}
-\date{2019/01/13 v0.1.0}
+\date{${VERSION}$}
 \begin{document}
 \maketitle
 
@@ -356,9 +357,8 @@ Typesets a \LaTeX\ package, option, file extension, etc.\ in |\texttt|.
 
 These environments typeset ``notices'' with a hanging indent. Original
 definitions written by Javier Bezos for the \ctan{enumitem} documenation.
-|\ltxguidex@noticestyle| is executed before the marker text (``warning,''
-``note,'' etc.) in a separate group. New notice environments can be created
-with |\newnotice|.
+|\noticestyle| is executed before the marker text (``warning,'' ``note,''
+etc.). New notice environments can be created with |\newnotice|.
 
 \begin{bug}
 	If the first content in a notice environment is vertical, the marker
@@ -596,5 +596,14 @@ environment with a more elegant interface.
 \end{keys}
 \end{LTXexample}
 \end{example}
+
+\begin{changelog}[author=Rebecca Turner]
+\begin{version}[v=0.1.1, date=2019-04-15]
+\added
+	\item Renamed \cs{ltxguidex@noticestyle} to \cs{noticestyle} and committed
+	it to the public \textsc{api}.
+	\item The \cs{cs} and \cs{command} commands.
+\end{version}
+\end{changelog}
 
 \end{document}

@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}[1994/12/01]
-\ProvidesClass{ltxguidex}[2019/01/13 v0.1.0 Extended LaTeX documentation class]
+\ProvidesClass{ltxguidex}[${VERSION}$ Extended LaTeX documentation class]
 % Description: An improved document class for writing LaTeX documentation
 %              with extra tools for authors.
 % Homepage:    https://github.com/9999years/ltxguidex
@@ -81,11 +81,11 @@
    \decl}
   {\enddecl}
 
-\newcommand{\ltxguidex@noticestyle}{\sffamily\bfseries\color{notes}}
+\newcommand{\noticestyle}{\sffamily\bfseries\color{notes}}
 \def\@begintheorem#1#2{%
   \list{}{}%
   \global\advance\@listdepth\m@ne
-  \item[{\ltxguidex@noticestyle\MakeUppercase{#1}}]}
+  \item[{\noticestyle\MakeUppercase{#1}}]}
 \newcommand{\newnotice}[2]{\newtheorem{#1}{#2}}
 
 \newnotice{warning}{Warning}
@@ -208,6 +208,8 @@
 \let\ctanlogo\ctan
 \newcommand{\pipe}{\char"7C}
 \newcommand{\bs}{\char"5C}
+\newcommand{\command}[1]{\texttt{\bs#1}}
+\let\cs\command
 
 \newcommand{\email}[1]{\href{mailto:#1}{#1}}
 \newcommand{\http}[1]{\href{http://#1}{#1}}
